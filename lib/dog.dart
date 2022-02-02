@@ -2,6 +2,7 @@ class Dog {
   final String breed;
   final String name;
   final String photoFileName;
+  //boo _like = false;
   bool like = false;
 
   Dog({
@@ -11,7 +12,7 @@ class Dog {
   });
 }
 
-var dogs = <Dog>[
+var initialDogs = <Dog>[
   Dog(
     name: 'Maisey',
     breed: 'Treeing Walker Coonhound',

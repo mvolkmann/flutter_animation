@@ -28,6 +28,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var dogs = initialDogs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +59,13 @@ class _HomeState extends State<Home> {
       width: thumbnailSize,
     );
 
+    var icon = dog.like ? CupertinoIcons.heart_fill : CupertinoIcons.heart;
+
     return ListTile(
       iconColor: Colors.red,
       key: ObjectKey(dog),
       leading: thumbnail,
       onTap: () {
-        print('got tap on ${dog.name}');
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -70,14 +73,17 @@ class _HomeState extends State<Home> {
           ),
         );
       },
-      //selected: selected,
       subtitle: Text(dog.breed),
       textColor: Colors.black, // text color
       title: Text(dog.name, style: TextStyle(fontWeight: FontWeight.bold)),
-      trailing: Icon(CupertinoIcons.heart),
-      //selectedColor: Colors.green, // text and icon color
-      //selectedTileColor: selectedTileColor,
-      //tileColor: tileColor,
+      trailing: IconButton(
+        icon: Icon(icon),
+        onPressed: () {
+          setState(() {
+            dog.like = !dog.like;
+          });
+        },
+      ),
     );
   }
 }
