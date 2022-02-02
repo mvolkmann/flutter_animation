@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './dog.dart';
+import './like_button.dart';
 
 class DogPage extends StatelessWidget {
   static const route = 'dog';
@@ -28,6 +29,17 @@ class DogPage extends StatelessWidget {
           child: Column(
             children: [
               image,
+              LikeButton(
+                like: dog.like,
+                onToggle: () {
+                  /* TODO: Need a better state management approach.
+                  setState(() {
+                    dog.like = !dog.like;
+                  });
+                  */
+                  dog.like = !dog.like;
+                },
+              ),
               SizedBox(height: 20),
               Text(dog.breed,
                   style: TextStyle(

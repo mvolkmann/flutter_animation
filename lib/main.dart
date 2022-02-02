@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import './dog.dart';
 import './dog_page.dart';
+import './like_button.dart';
 
 void main() => runApp(const MyApp());
 
@@ -37,6 +37,7 @@ class _HomeState extends State<Home> {
         title: Text('Dogs'),
       ),
       body: Center(
+        //TODO: Can you make the list reorderable by dragging?
         child: ListView.separated(
           itemCount: dogs.length,
           itemBuilder: _buildItem,
@@ -59,10 +60,9 @@ class _HomeState extends State<Home> {
       width: thumbnailSize,
     );
 
-    var icon = dog.like ? CupertinoIcons.heart_fill : CupertinoIcons.heart;
+    var icon = dog.like ? Icons.favorite : Icons.favorite_outline;
 
     return ListTile(
-      iconColor: Colors.red,
       key: ObjectKey(dog),
       leading: thumbnail,
       onTap: () {
@@ -76,9 +76,9 @@ class _HomeState extends State<Home> {
       subtitle: Text(dog.breed),
       textColor: Colors.black, // text color
       title: Text(dog.name, style: TextStyle(fontWeight: FontWeight.bold)),
-      trailing: IconButton(
-        icon: Icon(icon),
-        onPressed: () {
+      trailing: LikeButton(
+        like: dog.like,
+        onToggle: () {
           setState(() {
             dog.like = !dog.like;
           });
