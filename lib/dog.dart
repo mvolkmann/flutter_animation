@@ -29,7 +29,7 @@ var initialDogs = <Dog>[
     photoFileName: 'german-shorthaired-pointer.jpg',
   ),
   Dog(
-    name: 'Dasher',
+    name: 'Comet',
     breed: 'Whippet',
     photoFileName: 'whippet.jpg',
   ),
