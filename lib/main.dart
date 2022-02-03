@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './dog.dart';
 import './dog_page.dart';
+import './fade_in.dart';
 import './image_cycle.dart';
 import './like_button.dart';
 
@@ -52,6 +53,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+            FadeIn(child: Text('Do you see me?')),
             ImageCycle(fileNames: fileNames),
           ],
         ),
