@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class FadeIn extends StatefulWidget {
+// For other versions of this widget, see
+// fade_in_stateful.dart and fail_in_low.dart.
+class FadeIn extends StatelessWidget {
   static const defaultDuration = Duration(seconds: 1);
 
   final Widget child;
@@ -15,27 +17,14 @@ class FadeIn extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<FadeIn> createState() => _FadeInState();
-}
-
-class _FadeInState extends State<FadeIn> {
-  double _opacity = 0;
-
-  @override
-  void initState() {
-    // Change the opacity to 1 after this widget is rendered.
-    Future(() {
-      setState(() => _opacity = 1);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      child: widget.child,
-      duration: widget.duration,
-      opacity: _opacity,
-      onEnd: widget.onComplete,
+    return TweenAnimationBuilder(
+      child: child,
+      duration: duration,
+      tween: Tween(begin: 0.0, end: 1.0),
+      builder: (_, double value, Widget? child) =>
+          Opacity(child: child, opacity: value),
+      onEnd: onComplete,
     );
   }
 }

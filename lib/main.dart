@@ -57,7 +57,6 @@ class _HomeState extends State<Home> {
             ),
             //LowLevelAnimation(),
             //HighLevelAnimation(),
-            /*
             FadeIn(
                 child: Text(
                   'Do you see me?',
@@ -67,7 +66,6 @@ class _HomeState extends State<Home> {
                 onComplete: () {
                   print('FadeIn completed');
                 }),
-            */
             ImageCycle(fileNames: fileNames),
           ],
         ),
