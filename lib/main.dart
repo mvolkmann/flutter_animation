@@ -53,7 +53,15 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            FadeIn(child: Text('Do you see me?')),
+            FadeIn(
+                child: Text(
+                  'Do you see me?',
+                  style: TextStyle(fontSize: 30),
+                ),
+                duration: Duration(seconds: 3),
+                onComplete: () {
+                  print('FadeIn completed');
+                }),
             ImageCycle(fileNames: fileNames),
           ],
         ),
