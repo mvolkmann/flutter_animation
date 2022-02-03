@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import './dog.dart';
 import './dog_page.dart';
 import './fade_in.dart';
+import './high_level_animation.dart';
 import './image_cycle.dart';
 import './like_button.dart';
+import './low_level_animation.dart';
 
 void main() => runApp(const MyApp());
 
@@ -53,6 +55,9 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
+            //LowLevelAnimation(),
+            //HighLevelAnimation(),
+            /*
             FadeIn(
                 child: Text(
                   'Do you see me?',
@@ -62,6 +67,7 @@ class _HomeState extends State<Home> {
                 onComplete: () {
                   print('FadeIn completed');
                 }),
+            */
             ImageCycle(fileNames: fileNames),
           ],
         ),
@@ -71,16 +77,20 @@ class _HomeState extends State<Home> {
 
   Widget _buildItem(BuildContext context, int index) {
     var dog = dogs[index];
+    var key = ObjectKey(dog);
 
     const thumbnailSize = 50.0;
-    var thumbnail = SizedBox(
-      child: Image.asset('assets/images/${dog.photoFileName}'),
-      height: thumbnailSize,
-      width: thumbnailSize,
+    var thumbnail = Hero(
+      tag: key,
+      child: SizedBox(
+        child: Image.asset('assets/images/${dog.photoFileName}'),
+        height: thumbnailSize,
+        width: thumbnailSize,
+      ),
     );
 
     return ListTile(
-      key: ObjectKey(dog),
+      key: key,
       leading: thumbnail,
       onTap: () {
         Navigator.push(

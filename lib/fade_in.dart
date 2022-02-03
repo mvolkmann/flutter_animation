@@ -18,38 +18,24 @@ class FadeIn extends StatefulWidget {
   State<FadeIn> createState() => _FadeInState();
 }
 
-class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
-  late Animation<double> _animation;
-  late AnimationController _controller;
+class _FadeInState extends State<FadeIn> {
+  double _opacity = 0;
 
   @override
   void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
-  }
-
-  @override
-  dispose() {
-    _controller.dispose();
-    // _animation does not have a dispose method.
-    super.dispose();
+    // Change the opacity to 1 after this widget is rendered.
+    Future(() {
+      setState(() => _opacity = 1);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var transition = FadeTransition(
-      opacity: _animation,
+    return AnimatedOpacity(
       child: widget.child,
+      duration: widget.duration,
+      opacity: _opacity,
+      onEnd: widget.onComplete,
     );
-
-    // Start the animation.
-    var future = _controller.forward();
-
-    if (widget.onComplete != null) future.whenComplete(widget.onComplete!);
-
-    return transition;
   }
 }

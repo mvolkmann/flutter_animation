@@ -13,10 +13,13 @@ class DogPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final description = breedDescriptions[dog.breed] ?? 'none';
     const imageSize = 200.0;
-    final image = SizedBox(
-      child: Image.asset('assets/images/${dog.photoFileName}'),
-      height: imageSize,
-      width: imageSize,
+    final image = Hero(
+      tag: ObjectKey(dog),
+      child: SizedBox(
+        child: Image.asset('assets/images/${dog.photoFileName}'),
+        height: imageSize,
+        width: imageSize,
+      ),
     );
 
     return Scaffold(
