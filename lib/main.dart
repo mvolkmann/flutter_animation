@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './dog.dart';
 import './dog_page.dart';
+import './image_cycle.dart';
 import './like_button.dart';
 
 void main() => runApp(const MyApp());
@@ -29,6 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   var dogs = initialDogs;
+  var fileNames = initialDogs.map((dog) => dog.photoFileName).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +39,21 @@ class _HomeState extends State<Home> {
         title: Text('Dogs'),
       ),
       body: Center(
-        //TODO: Can you make the list reorderable by dragging?
-        child: ListView.separated(
-          itemCount: dogs.length,
-          itemBuilder: _buildItem,
-          separatorBuilder: (_, index) => Divider(
-            color: Colors.black45,
-            height: 1,
-          ),
+        child: Column(
+          //TODO: Can you make the list reorderable by dragging?
+          children: [
+            Expanded(
+              child: ListView.separated(
+                itemCount: dogs.length,
+                itemBuilder: _buildItem,
+                separatorBuilder: (_, index) => Divider(
+                  color: Colors.black45,
+                  height: 1,
+                ),
+              ),
+            ),
+            ImageCycle(fileNames: fileNames),
+          ],
         ),
       ),
     );
@@ -59,8 +68,6 @@ class _HomeState extends State<Home> {
       height: thumbnailSize,
       width: thumbnailSize,
     );
-
-    var icon = dog.like ? Icons.favorite : Icons.favorite_outline;
 
     return ListTile(
       key: ObjectKey(dog),
