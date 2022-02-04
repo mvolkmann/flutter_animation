@@ -21,7 +21,7 @@ class _ImageCycleState extends State<ImageCycle> {
           (fileName) => SizedBox(
             child: Image.asset('assets/images/$fileName'),
             height: imageSize,
-            key: ValueKey(fileName),
+            key: ValueKey(fileName), // must have this!
             width: imageSize,
           ),
         )
@@ -35,9 +35,14 @@ class _ImageCycleState extends State<ImageCycle> {
       AnimatedSwitcher(
         child: images[index],
         duration: Duration(seconds: 1),
+        // This performs a fade transition by default.
+        // For a different animation, set the transitionBuilder argument.
+        transitionBuilder: (child, animation) =>
+            //FadeTransition(child: child, opacity: animation),
+            ScaleTransition(child: child, scale: animation),
       ),
       ElevatedButton(
-        child: Text('Next Image'),
+        child: Text('Next'),
         onPressed: () {
           setState(() {
             index = (index + 1) % widget.fileNames.length;
