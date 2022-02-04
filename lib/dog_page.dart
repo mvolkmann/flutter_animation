@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animation/extensions/widget_extensions.dart';
+
 import './dog.dart';
 import './like_button.dart';
 
@@ -26,35 +28,30 @@ class DogPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(dog.name),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              image,
-              LikeButton(
-                like: dog.like,
-                onToggle: () {
-                  /* TODO: Need a better state management approach.
+      body: Column(
+        children: [
+          image,
+          LikeButton(
+            like: dog.like,
+            onToggle: () {
+              /* TODO: Need a better state management approach.
                   setState(() {
                     dog.like = !dog.like;
                   });
                   */
-                  dog.like = !dog.like;
-                },
-              ),
-              SizedBox(height: 20),
-              Text(dog.breed,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  )),
-              SizedBox(height: 20),
-              Text(description),
-            ],
+              dog.like = !dog.like;
+            },
           ),
-        ),
-      ),
+          SizedBox(height: 20),
+          Text(dog.breed,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              )),
+          SizedBox(height: 20),
+          Text(description),
+        ],
+      ).padding(20),
     );
   }
 }

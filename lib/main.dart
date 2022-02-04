@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animation/extensions/widget_extensions.dart';
+
 import './dog.dart';
 import './dog_page.dart';
 import './fade_in_low.dart';
@@ -41,34 +43,30 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('Dogs'),
       ),
-      body: Center(
-        child: Column(
-          //TODO: Can you make the list reorderable by dragging?
-          children: [
-            Expanded(
-              child: ListView.separated(
-                itemCount: dogs.length,
-                itemBuilder: _buildItem,
-                separatorBuilder: (_, index) => Divider(
-                  color: Colors.black45,
-                  height: 1,
-                ),
-              ),
+      body: Column(
+        //TODO: Can you make the list reorderable by dragging?
+        children: [
+          ListView.separated(
+            itemCount: dogs.length,
+            itemBuilder: _buildItem,
+            separatorBuilder: (_, index) => Divider(
+              color: Colors.black45,
+              height: 1,
             ),
-            //LowLevelAnimation(),
-            //HighLevelAnimation(),
-            FadeIn(
-                child: Text(
-                  'Do you see me?',
-                  style: TextStyle(fontSize: 30),
-                ),
-                duration: Duration(seconds: 3),
-                onComplete: () {
-                  print('FadeIn completed');
-                }),
-            ImageCycle(fileNames: fileNames),
-          ],
-        ),
+          ).expanded,
+          //LowLevelAnimation(),
+          //HighLevelAnimation(),
+          FadeIn(
+              child: Text(
+                'Do you see me?',
+                style: TextStyle(fontSize: 30),
+              ),
+              duration: Duration(seconds: 3),
+              onComplete: () {
+                print('FadeIn completed');
+              }),
+          ImageCycle(fileNames: fileNames),
+        ],
       ),
     );
   }
