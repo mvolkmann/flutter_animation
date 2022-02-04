@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import './dog.dart';
 import './dog_page.dart';
-import './fade_in.dart';
-import './high_level_animation.dart';
+import './fade_in_low.dart';
+//import './high_level_animation.dart';
 import './image_cycle.dart';
 import './like_button.dart';
-import './low_level_animation.dart';
+//import './low_level_animation.dart';
 
 void main() => runApp(const MyApp());
 

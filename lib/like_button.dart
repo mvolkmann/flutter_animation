@@ -19,7 +19,7 @@ class _LikeButtonState extends State<LikeButton> {
   Widget build(BuildContext context) {
     var icon = widget.like ? Icons.favorite : Icons.favorite_outline;
     return IconButton(
-      icon: Icon(icon, color: Colors.red),
+      icon: Icon(icon, color: Colors.red, size: 20),
       onPressed: widget.onToggle,
     );
   }
