@@ -11,38 +11,39 @@ class ImageCycle extends StatefulWidget {
 
 class _ImageCycleState extends State<ImageCycle> {
   int index = 0;
-  int nextIndex = 1;
+  late List<Widget> images;
+
+  @override
+  void initState() {
+    const imageSize = 200.0;
+    images = widget.fileNames
+        .map(
+          (fileName) => SizedBox(
+            child: Image.asset('assets/images/$fileName'),
+            height: imageSize,
+            key: ValueKey(fileName),
+            width: imageSize,
+          ),
+        )
+        .toList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final image = _buildImage(widget.fileNames[index]);
-    final nextImage = _buildImage(widget.fileNames[nextIndex]);
-
     return Column(children: [
-      AnimatedCrossFade(
-        crossFadeState: CrossFadeState.showSecond,
-        duration: Duration(milliseconds: 1000),
-        firstChild: image,
-        secondChild: nextImage,
+      AnimatedSwitcher(
+        child: images[index],
+        duration: Duration(seconds: 1),
       ),
       ElevatedButton(
         child: Text('Next Image'),
         onPressed: () {
           setState(() {
-            index = nextIndex;
-            nextIndex = (index + 1) % widget.fileNames.length;
+            index = (index + 1) % widget.fileNames.length;
           });
         },
       )
     ]);
-  }
-
-  Widget _buildImage(String fileName) {
-    const imageSize = 200.0;
-    return SizedBox(
-      child: Image.asset('assets/images/$fileName'),
-      height: imageSize,
-      width: imageSize,
-    );
   }
 }
