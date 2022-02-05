@@ -10,6 +10,8 @@ import './image_cycle.dart';
 import './like_button.dart';
 //import './low_level_animation.dart';
 
+const animateList = true;
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -38,7 +40,7 @@ class _HomeState extends State<Home> {
   final _dogs = initialDogs;
   final _fileNames = initialDogs.map((dog) => dog.photoFileName).toList();
   final _listKey = GlobalKey<AnimatedListState>();
-  final _tiles = <Widget>[];
+  var _tiles = <Widget>[];
 
   // Create a Tween that starts with x at widget width (1 = full offset)
   // and ends with x at beginning of widget width (0 = no offset).
@@ -51,19 +53,23 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    // The callback function here is called
-    // AFTER the first time the build method runs.
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      var currentState = _listKey.currentState!;
-      var delay = const Duration(milliseconds: 200);
-      for (var i = 0; i < _dogs.length; i++) {
-        // Wait a bit before adding the next tile.
-        await Future.delayed(delay, () {
-          _tiles.add(_buildTile(_dogs[i]));
-          currentState.insertItem(i);
-        });
-      }
-    });
+    if (animateList) {
+      // The callback function here is called
+      // AFTER the first time the build method runs.
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
+        var currentState = _listKey.currentState!;
+        var delay = const Duration(milliseconds: 200);
+        for (var i = 0; i < _dogs.length; i++) {
+          // Wait a bit before adding the next tile.
+          await Future.delayed(delay, () {
+            _tiles.add(_buildTile(_dogs[i]));
+            currentState.insertItem(i);
+          });
+        }
+      });
+    } else {
+      _tiles = _dogs.map(_buildTile).toList();
+    }
   }
 
   @override
@@ -76,11 +82,11 @@ class _HomeState extends State<Home> {
         //TODO: Can you make the list reorderable by dragging?
         children: [
           // With this, tiles start in their final position.
-          //_buildListView(),
+          if (!animateList) _buildListView(),
 
           // With this, tiles slide in from the right.
           // https://www.youtube.com/watch?v=i9g2kSuWutk&list=PL4cUxeGkcC9gP1qg8yj-Jokef29VRCLt1&index=9
-          _buildAnimatedList(),
+          if (animateList) _buildAnimatedList(),
 
           //LowLevelAnimation(),
           //HighLevelAnimation(),
@@ -123,7 +129,7 @@ class _HomeState extends State<Home> {
       itemCount: _tiles.length,
       itemBuilder: (context, index) => _tiles[index],
       separatorBuilder: (_, index) => divider,
-    );
+    ).expanded;
   }
 
   Widget _buildTile(Dog dog) {
