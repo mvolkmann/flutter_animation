@@ -30,7 +30,7 @@ class DogState extends ChangeNotifier {
   bool get like => _like;
 
   void toggleLike() {
-    _like = _like;
+    _like = !_like;
     notifyListeners();
   }
 }

@@ -122,6 +122,8 @@ class _HomeState extends State<Home> {
     ).expanded;
   }
 
+  // This adds DogTile widgets over time with a 200ms delay between each
+  // so they can slide in separately instead of all at the same time.
   void _buildTilesLater(dogs) async {
     // The callback function here is called
     // AFTER the first time the build method runs.
