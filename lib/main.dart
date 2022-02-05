@@ -145,8 +145,6 @@ class _HomeState extends State<Home> {
       subtitle: Text(dog.breed),
       textColor: Colors.black, // text color
       title: Text(dog.name, style: TextStyle(fontWeight: FontWeight.bold)),
-      //TODO: Since you now call _buildTile only once per tile,
-      //TODO: the LikeButton never gets re-rendered in its new state!s
       trailing: LikeButton(
         like: dog.like,
         onToggle: () {
