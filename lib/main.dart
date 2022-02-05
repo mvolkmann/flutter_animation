@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
       Future future = Future(() {});
       for (var i = 0; i < _dogs.length; i++) {
         future = future.then((_) {
-          return Future.delayed(const Duration(milliseconds: 500), () {
+          return Future.delayed(const Duration(milliseconds: 200), () {
             _tiles.add(_buildTile(_dogs[i]));
             _listKey.currentState!.insertItem(i);
           });
@@ -77,10 +77,9 @@ class _HomeState extends State<Home> {
           //_buildListView(),
 
           // With this, tiles slide in from the right.
+          // https://www.youtube.com/watch?v=i9g2kSuWutk&list=PL4cUxeGkcC9gP1qg8yj-Jokef29VRCLt1&index=9
           _buildAnimatedList(),
 
-          //TODO: Finish this from video 9 at
-          // https://www.youtube.com/watch?v=i9g2kSuWutk&list=PL4cUxeGkcC9gP1qg8yj-Jokef29VRCLt1&index=9
           //LowLevelAnimation(),
           //HighLevelAnimation(),
           FadeIn(
@@ -101,7 +100,7 @@ class _HomeState extends State<Home> {
 
   Widget _buildAnimatedList() {
     return AnimatedList(
-      initialItemCount: _dogs.length,
+      initialItemCount: _tiles.length,
       itemBuilder: (context, index, animation) {
         return SlideTransition(
           child: _tiles[index],
