@@ -20,14 +20,11 @@ class _LikeButtonState extends State<LikeButton> {
   @override
   void initState() {
     like = widget.like;
-    print('like_button.dart initState: like = $like');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('like_button.dart build: like = $like');
-    print('like_button.dart build: widget.like = ${widget.like}');
     var icon = like ? Icons.favorite : Icons.favorite_outline;
     return IconButton(
       icon: Icon(icon, color: Colors.red, size: 20),

@@ -13,7 +13,6 @@ class DogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('dog_page.dart build: entered');
     final description = breedDescriptions[dog.breed] ?? 'none';
     const imageSize = 200.0;
     final image = Hero(

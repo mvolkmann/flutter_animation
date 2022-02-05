@@ -17,11 +17,10 @@ class _DogTileState extends State<DogTile> {
   @override
   Widget build(BuildContext context) {
     var dog = widget.dog;
-    var key = ObjectKey(dog);
 
     const thumbnailSize = 50.0;
     var thumbnail = Hero(
-      tag: key,
+      tag: ObjectKey(dog),
       child: SizedBox(
         child: Image.asset('assets/images/${dog.photoFileName}'),
         height: thumbnailSize,
@@ -29,9 +28,7 @@ class _DogTileState extends State<DogTile> {
       ),
     );
 
-    print('dog_tile.dart build: dog.like = ${dog.like}');
     return ListTile(
-      key: key,
       leading: thumbnail,
       onTap: () {
         Navigator.push(
@@ -42,7 +39,6 @@ class _DogTileState extends State<DogTile> {
         ).then((value) {
           // This is called when navigation returns to this page.
           // value will be null.
-          print('dog_tile.dart x: dog.like = ${dog.like}');
           //TODO: Is the next line really needed?
           setState(() {}); // forces rebuild
         });
@@ -55,7 +51,7 @@ class _DogTileState extends State<DogTile> {
       ),
       trailing: LikeButton(
         like: dog.like,
-        key: ObjectKey(dog), //TODO: Does this help anything?
+        key: GlobalKey(), //TODO: Is this the solution?
         onToggle: () => dog.toggleLike(),
       ),
     );
