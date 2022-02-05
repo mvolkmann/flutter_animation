@@ -36,11 +36,12 @@ class _DogTileState extends State<DogTile> {
           MaterialPageRoute(
             builder: (context) => DogPage(dog: dog),
           ),
-        ).then((value) {
+        ).then((_) {
           // This is called when navigation returns to this page.
-          // value will be null.
-          //TODO: Is the next line really needed?
-          setState(() {}); // forces rebuild
+          // The argument will be null.
+          // Calling setState forces this widget to call build again
+          // which is needed if the value of dog.like changed.
+          setState(() {});
         });
       },
       subtitle: Text(dog.breed),
@@ -51,7 +52,7 @@ class _DogTileState extends State<DogTile> {
       ),
       trailing: LikeButton(
         like: dog.like,
-        key: GlobalKey(), //TODO: Is this the solution?
+        key: GlobalKey(), // critical to updating when dog.like changes!
         onToggle: () => dog.toggleLike(),
       ),
     );
