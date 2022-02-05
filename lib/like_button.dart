@@ -34,18 +34,16 @@ class _LikeButtonState extends State<LikeButton>
       vsync: this,
     );
 
-    _sizeAnimation = TweenSequence(
-      <TweenSequenceItem<double>>[
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: startSize, end: endSize),
-          weight: 50, // half total sequence
-        ),
-        TweenSequenceItem<double>(
-          tween: Tween<double>(begin: endSize, end: startSize),
-          weight: 50, // half total sequence
-        ),
-      ],
-    ).animate(_controller);
+    _sizeAnimation = TweenSequence([
+      TweenSequenceItem<double>(
+        tween: Tween<double>(begin: startSize, end: endSize),
+        weight: 1,
+      ),
+      TweenSequenceItem<double>(
+        tween: Tween<double>(begin: endSize, end: startSize),
+        weight: 1, // same as first
+      ),
+    ]).animate(_controller);
   }
 
   @override
@@ -60,24 +58,23 @@ class _LikeButtonState extends State<LikeButton>
 
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
-        return IconButton(
-          icon: Icon(icon, color: Colors.red, size: _sizeAnimation.value),
-          onPressed: () {
-            setState(() {
-              _like = !_like;
+      builder: (context, child) => IconButton(
+        icon: Icon(icon, color: Colors.red, size: _sizeAnimation.value),
+        onPressed: () {
+          setState(() {
+            _like = !_like;
 
-              // Animate the size of the heart icon up and back down
-              if (_controller.status == AnimationStatus.dismissed) {
-                _controller.forward();
-              } else {
-                _controller.reverse();
-              }
-            });
-            widget.onToggle(); // informs parent of change
-          },
-        );
-      },
+            // Animate the size of the heart icon up and back down
+            if (_controller.status == AnimationStatus.dismissed) {
+              _controller.forward();
+            } else {
+              _controller.reverse();
+            }
+          });
+
+          widget.onToggle(); // informs parent of change
+        },
+      ),
     );
   }
 }
