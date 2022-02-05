@@ -51,14 +51,12 @@ class _HomeState extends State<Home> {
 
     // The callback function here is called
     // AFTER the first time the build method runs.
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      Future future = Future(() {});
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      var delay = const Duration(milliseconds: 200);
       for (var i = 0; i < _dogs.length; i++) {
-        future = future.then((_) {
-          return Future.delayed(const Duration(milliseconds: 200), () {
-            _tiles.add(_buildTile(_dogs[i]));
-            _listKey.currentState!.insertItem(i);
-          });
+        await Future.delayed(delay, () {
+          _tiles.add(_buildTile(_dogs[i]));
+          _listKey.currentState!.insertItem(i);
         });
       }
     });
