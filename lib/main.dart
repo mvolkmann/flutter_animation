@@ -12,25 +12,18 @@ import './image_cycle.dart';
 
 const animateList = true;
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Dogs',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChangeNotifierProvider(
-        create: (_) => DogsState(),
-        child: Home(),
+void main() => runApp(
+      MaterialApp(
+        title: 'Dogs',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: ChangeNotifierProvider(
+          create: (_) => DogsState(),
+          child: Home(),
+        ),
       ),
     );
-  }
-}
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

@@ -23,7 +23,9 @@ class DogState extends ChangeNotifier {
     required this.breed,
     required this.name,
     required this.photoFileName,
-  });
+  }) {
+    print('dogs_state.dart DogState: name = $name');
+  }
 
   bool get like => _like;
 
