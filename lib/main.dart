@@ -10,7 +10,7 @@ import './image_cycle.dart';
 import './like_button.dart';
 //import './low_level_animation.dart';
 
-const animateList = false;
+const animateList = true;
 
 void main() => runApp(const MyApp());
 
