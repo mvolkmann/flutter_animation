@@ -30,9 +30,6 @@ class _FadeInState extends State<FadeIn> with SingleTickerProviderStateMixin {
       vsync: this, // a TickerProvider`
     );
 
-    // To see all the values the controller takes on ...
-    //_controller.addListener(() => print(_controller.value));
-
     _opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(_controller);
 
     _colorAnimation =

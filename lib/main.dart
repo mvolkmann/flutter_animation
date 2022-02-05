@@ -3,6 +3,7 @@ import 'package:flutter_animation/extensions/widget_extensions.dart';
 
 import './dog.dart';
 import './dog_page.dart';
+//import './fade_in.dart';
 import './fade_in_low.dart';
 //import './high_level_animation.dart';
 import './image_cycle.dart';
@@ -34,8 +35,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var dogs = initialDogs;
-  var fileNames = initialDogs.map((dog) => dog.photoFileName).toList();
+  final _dogs = initialDogs;
+  final _fileNames = initialDogs.map((dog) => dog.photoFileName).toList();
+  final _listKey = GlobalKey<AnimatedListState>();
+  final _tiles = <Widget>[];
+
+  // Create a Tween that starts with x at widget width (1 = full offset)
+  // and ends with x at beginning of widget width (0 = no offset).
+  // The y value will always be at the top of the widget (0 = no offset).
+  final Tween<Offset> _offset = Tween(begin: Offset(1, 0), end: Offset(0, 0));
+
+  @override
+  void initState() {
+    super.initState();
+
+    // The callback function here is called
+    // AFTER the first time the build method runs.
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Future future = Future(() {});
+      for (var i = 0; i < _dogs.length; i++) {
+        future = future.then((_) {
+          return Future.delayed(const Duration(milliseconds: 500), () {
+            _tiles.add(_buildTile(_dogs[i]));
+            _listKey.currentState!.insertItem(i);
+          });
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,33 +73,57 @@ class _HomeState extends State<Home> {
       body: Column(
         //TODO: Can you make the list reorderable by dragging?
         children: [
-          ListView.separated(
-            itemCount: dogs.length,
-            itemBuilder: _buildItem,
-            separatorBuilder: (_, index) => Divider(
-              color: Colors.black45,
-              height: 1,
-            ),
-          ).expanded,
+          // With this, tiles start in their final position.
+          //_buildListView(),
+
+          // With this, tiles slide in from the right.
+          _buildAnimatedList(),
+
+          //TODO: Finish this from video 9 at
+          // https://www.youtube.com/watch?v=i9g2kSuWutk&list=PL4cUxeGkcC9gP1qg8yj-Jokef29VRCLt1&index=9
           //LowLevelAnimation(),
           //HighLevelAnimation(),
           FadeIn(
-              child: Text(
-                'Do you see me?',
-                style: TextStyle(fontSize: 30),
-              ),
-              duration: Duration(seconds: 3),
-              onComplete: () {
-                print('FadeIn completed');
-              }),
-          ImageCycle(fileNames: fileNames),
+            child: Text(
+              'Do you see me?',
+              style: TextStyle(fontSize: 30),
+            ),
+            duration: Duration(seconds: 3),
+            onComplete: () {
+              print('FadeIn completed');
+            },
+          ),
+          ImageCycle(fileNames: _fileNames),
         ],
       ),
     );
   }
 
-  Widget _buildItem(BuildContext context, int index) {
-    var dog = dogs[index];
+  Widget _buildAnimatedList() {
+    return AnimatedList(
+      initialItemCount: _dogs.length,
+      itemBuilder: (context, index, animation) {
+        return SlideTransition(
+          child: _tiles[index],
+          position: animation.drive(_offset),
+        );
+      },
+      key: _listKey,
+    ).expanded;
+  }
+
+  Widget _buildListView() {
+    return ListView.separated(
+      itemCount: _dogs.length,
+      itemBuilder: (context, index) => _tiles[index],
+      separatorBuilder: (_, index) => Divider(
+        color: Colors.black45,
+        height: 1,
+      ),
+    ).expanded;
+  }
+
+  Widget _buildTile(Dog dog) {
     var key = ObjectKey(dog);
 
     const thumbnailSize = 50.0;

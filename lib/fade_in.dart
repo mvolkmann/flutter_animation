@@ -20,6 +20,7 @@ class FadeIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
       child: child,
+      //curve: Curves.easeInOut,
       duration: duration,
       tween: Tween(begin: 0.0, end: 1.0),
       builder: (_, double value, Widget? child) =>
