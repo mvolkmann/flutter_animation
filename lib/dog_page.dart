@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animation/extensions/widget_extensions.dart';
 
-import './dog.dart';
+import './dogs_state.dart' show breedDescriptions, DogState;
 import './like_button.dart';
 
 class DogPage extends StatelessWidget {
   static const route = 'dog';
 
-  final Dog dog;
+  final DogState dog;
 
   const DogPage({required this.dog, Key? key}) : super(key: key);
 
@@ -33,14 +33,7 @@ class DogPage extends StatelessWidget {
           image,
           LikeButton(
             like: dog.like,
-            onToggle: () {
-              /* TODO: Need a better state management approach.
-                  setState(() {
-                    dog.like = !dog.like;
-                  });
-                  */
-              dog.like = !dog.like;
-            },
+            onToggle: () => dog.toggleLike(),
           ),
           SizedBox(height: 20),
           Text(dog.breed,

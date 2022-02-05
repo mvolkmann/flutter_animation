@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
+
 class Dog {
   final String breed;
   final String name;
   final String photoFileName;
-  //boo _like = false;
   bool like = false;
 
   Dog({
@@ -12,28 +13,64 @@ class Dog {
   });
 }
 
-var initialDogs = <Dog>[
-  Dog(
-    name: 'Maisey',
-    breed: 'Treeing Walker Coonhound',
-    photoFileName: 'treeing-walker-coonhound.jpg',
-  ),
-  Dog(
-    name: 'Ramsay',
-    breed: 'Native American Indian Dog',
-    photoFileName: 'native-american-indian-dog.jpg',
-  ),
-  Dog(
-    name: 'Oscar',
-    breed: 'German Shorthaired Pointer',
-    photoFileName: 'german-shorthaired-pointer.jpg',
-  ),
-  Dog(
-    name: 'Comet',
-    breed: 'Whippet',
-    photoFileName: 'whippet.jpg',
-  ),
-];
+class DogState extends ChangeNotifier {
+  late String breed;
+  late String name;
+  late String photoFileName;
+  bool _like = false;
+
+  DogState({
+    required this.breed,
+    required this.name,
+    required this.photoFileName,
+  });
+
+  bool get like => _like;
+
+  void toggleLike() {
+    _like = _like;
+    notifyListeners();
+  }
+}
+
+class DogsState extends ChangeNotifier {
+  final List<DogState> _dogs = [];
+
+  DogsState() {
+    addDog(DogState(
+      name: 'Maisey',
+      breed: 'Treeing Walker Coonhound',
+      photoFileName: 'treeing-walker-coonhound.jpg',
+    ));
+    addDog(DogState(
+      name: 'Ramsay',
+      breed: 'Native American Indian Dog',
+      photoFileName: 'native-american-indian-dog.jpg',
+    ));
+    addDog(DogState(
+      name: 'Oscar',
+      breed: 'German Shorthaired Pointer',
+      photoFileName: 'german-shorthaired-pointer.jpg',
+    ));
+    addDog(DogState(
+      name: 'Comet',
+      breed: 'Whippet',
+      photoFileName: 'whippet.jpg',
+    ));
+  }
+
+  void addDog(DogState dog) {
+    _dogs.add(dog);
+    notifyListeners();
+  }
+
+  List<DogState> get dogs => _dogs;
+
+  void removeDog(DogState dog) {
+    _dogs.remove(dog);
+    notifyListeners();
+  }
+}
 
 const gspDescription =
     'The versatile, medium-sized German Shorthaired Pointer is an enthusiastic gundog of all trades who thrives on vigorous exercise, positive training, and a lot of love. GSP people call their aristocratic companions the "perfect pointer." Male German Shorthaired Pointers stand between 23 and 25 inches at the shoulder and weigh anywhere from 55 to 70 pounds; females run smaller. The coat is solid liver (a reddish brown), or liver and white in distinctive patterns. The dark eyes shine with enthusiasm and friendliness. Built to work long days in the field or at the lake, GSPs are known for power, speed, agility, and endurance. Noble and aristocratic are words often used to describe the overall look. GSPs make happy, trainable pets who bond firmly to their family. They are always up for physical activities like running, swimming, organized dog sports, in fact, anything that will burn some of their boundless energy while spending outdoors time with a human buddy.';

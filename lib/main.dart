@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animation/extensions/widget_extensions.dart';
+import 'package:provider/provider.dart';
 
-import './dog.dart';
-import './dog_page.dart';
+import './dog_tile.dart';
+import './dogs_state.dart';
 //import './fade_in.dart';
 import './fade_in_low.dart';
 //import './high_level_animation.dart';
 import './image_cycle.dart';
-import './like_button.dart';
 //import './low_level_animation.dart';
 
 const animateList = true;
@@ -24,7 +24,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: ChangeNotifierProvider(
+        create: (_) => DogsState(),
+        child: Home(),
+      ),
     );
   }
 }
@@ -38,10 +41,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _divider = Divider(color: Colors.black45, height: 1);
-  final _dogs = initialDogs;
-  final _fileNames = initialDogs.map((dog) => dog.photoFileName).toList();
+  final _fileNames = <String>[];
   final _listKey = GlobalKey<AnimatedListState>();
-  late List<Widget> _tiles;
+  final _tiles = <Widget>[];
 
   // Create a Tween that starts with x at widget width (1 = full offset)
   // and ends with x at beginning of widget width (0 = no offset).
@@ -49,17 +51,26 @@ class _HomeState extends State<Home> {
   final Tween<Offset> _offset = Tween(begin: Offset(1, 0), end: Offset(0, 0));
 
   @override
-  void initState() {
-    super.initState();
-    if (animateList) {
-      _buildTilesLater();
-    } else {
-      _tiles = _dogs.map(_buildTile).toList();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var dogsState = Provider.of<DogsState>(context);
+    var dogs = dogsState.dogs;
+
+    if (_fileNames.isEmpty) {
+      for (var dog in dogs) {
+        _fileNames.add(dog.photoFileName);
+      }
+    }
+
+    if (_tiles.isEmpty) {
+      if (animateList) {
+        _buildTilesLater(dogs);
+      } else {
+        for (var dog in dogs) {
+          _tiles.add(DogTile(dog: dog));
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Dogs'),
@@ -118,55 +129,17 @@ class _HomeState extends State<Home> {
     ).expanded;
   }
 
-  Widget _buildTile(Dog dog) {
-    var key = ObjectKey(dog);
-
-    const thumbnailSize = 50.0;
-    var thumbnail = Hero(
-      tag: key,
-      child: SizedBox(
-        child: Image.asset('assets/images/${dog.photoFileName}'),
-        height: thumbnailSize,
-        width: thumbnailSize,
-      ),
-    );
-
-    return ListTile(
-      key: key,
-      leading: thumbnail,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DogPage(dog: dog),
-          ),
-        );
-      },
-      subtitle: Text(dog.breed),
-      textColor: Colors.black, // text color
-      title: Text(dog.name, style: TextStyle(fontWeight: FontWeight.bold)),
-      trailing: LikeButton(
-        like: dog.like,
-        onToggle: () {
-          print('onToggle: like = ${dog.like}');
-          setState(() => dog.like = !dog.like);
-        },
-      ),
-    );
-  }
-
-  void _buildTilesLater() async {
-    _tiles = [];
+  void _buildTilesLater(dogs) async {
     // The callback function here is called
     // AFTER the first time the build method runs.
     // Is this needed so that _listKey.currentState has a value?
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       var currentState = _listKey.currentState!;
       var delay = const Duration(milliseconds: 200);
-      for (var i = 0; i < _dogs.length; i++) {
+      for (var i = 0; i < dogs.length; i++) {
         // Wait a bit before adding the next tile.
         await Future.delayed(delay, () {
-          _tiles.add(_buildTile(_dogs[i]));
+          _tiles.add(DogTile(dog: dogs[i]));
           currentState.insertItem(i);
         });
       }
