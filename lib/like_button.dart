@@ -14,23 +14,67 @@ class LikeButton extends StatefulWidget {
   _LikeButtonState createState() => _LikeButtonState();
 }
 
-class _LikeButtonState extends State<LikeButton> {
-  late bool like;
+class _LikeButtonState extends State<LikeButton>
+    with SingleTickerProviderStateMixin {
+  late bool _like;
+
+  late Animation<double> _sizeAnimation;
+  late AnimationController _controller;
+  static const startSize = 20.0;
+  static const endSize = 30.0;
 
   @override
   void initState() {
-    like = widget.like;
     super.initState();
+
+    _like = widget.like;
+
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _sizeAnimation = TweenSequence(
+      <TweenSequenceItem<double>>[
+        TweenSequenceItem<double>(
+          tween: Tween<double>(begin: startSize, end: endSize),
+          weight: 50, // half total sequence
+        ),
+        TweenSequenceItem<double>(
+          tween: Tween<double>(begin: endSize, end: startSize),
+          weight: 50, // half total sequence
+        ),
+      ],
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var icon = like ? Icons.favorite : Icons.favorite_outline;
-    return IconButton(
-      icon: Icon(icon, color: Colors.red, size: 20),
-      onPressed: () {
-        setState(() => like = !like);
-        widget.onToggle(); // informs parent of change
+    var icon = _like ? Icons.favorite : Icons.favorite_outline;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return IconButton(
+          icon: Icon(icon, color: Colors.red, size: _sizeAnimation.value),
+          onPressed: () {
+            setState(() {
+              _like = !_like;
+              if (_like) {
+                _controller.forward();
+              } else {
+                _controller.reverse();
+              }
+            });
+            widget.onToggle(); // informs parent of change
+          },
+        );
       },
     );
   }
