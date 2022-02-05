@@ -66,7 +66,9 @@ class _LikeButtonState extends State<LikeButton>
           onPressed: () {
             setState(() {
               _like = !_like;
-              if (_like) {
+
+              // Animate the size of the heart icon up and back down
+              if (_controller.status == AnimationStatus.dismissed) {
                 _controller.forward();
               } else {
                 _controller.reverse();
