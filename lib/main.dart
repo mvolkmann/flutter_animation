@@ -10,7 +10,7 @@ import './image_cycle.dart';
 import './like_button.dart';
 //import './low_level_animation.dart';
 
-const animateList = true;
+const animateList = false;
 
 void main() => runApp(const MyApp());
 
@@ -37,36 +37,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _divider = Divider(color: Colors.black45, height: 1);
   final _dogs = initialDogs;
   final _fileNames = initialDogs.map((dog) => dog.photoFileName).toList();
   final _listKey = GlobalKey<AnimatedListState>();
-  var _tiles = <Widget>[];
+  late List<Widget> _tiles;
 
   // Create a Tween that starts with x at widget width (1 = full offset)
   // and ends with x at beginning of widget width (0 = no offset).
   // The y value will always be at the top of the widget (0 = no offset).
   final Tween<Offset> _offset = Tween(begin: Offset(1, 0), end: Offset(0, 0));
 
-  final divider = Divider(color: Colors.black45, height: 1);
-
   @override
   void initState() {
     super.initState();
-
     if (animateList) {
-      // The callback function here is called
-      // AFTER the first time the build method runs.
-      WidgetsBinding.instance?.addPostFrameCallback((_) async {
-        var currentState = _listKey.currentState!;
-        var delay = const Duration(milliseconds: 200);
-        for (var i = 0; i < _dogs.length; i++) {
-          // Wait a bit before adding the next tile.
-          await Future.delayed(delay, () {
-            _tiles.add(_buildTile(_dogs[i]));
-            currentState.insertItem(i);
-          });
-        }
-      });
+      _buildTilesLater();
     } else {
       _tiles = _dogs.map(_buildTile).toList();
     }
@@ -116,7 +102,7 @@ class _HomeState extends State<Home> {
       initialItemCount: _tiles.length,
       itemBuilder: (context, index, animation) {
         return SlideTransition(
-          child: Column(children: [_tiles[index], divider]),
+          child: Column(children: [_tiles[index], _divider]),
           position: animation.drive(_offset),
         );
       },
@@ -128,7 +114,7 @@ class _HomeState extends State<Home> {
     return ListView.separated(
       itemCount: _tiles.length,
       itemBuilder: (context, index) => _tiles[index],
-      separatorBuilder: (_, index) => divider,
+      separatorBuilder: (_, index) => _divider,
     ).expanded;
   }
 
@@ -159,14 +145,33 @@ class _HomeState extends State<Home> {
       subtitle: Text(dog.breed),
       textColor: Colors.black, // text color
       title: Text(dog.name, style: TextStyle(fontWeight: FontWeight.bold)),
+      //TODO: Since you now call _buildTile only once per tile,
+      //TODO: the LikeButton never gets re-rendered in its new state!s
       trailing: LikeButton(
         like: dog.like,
         onToggle: () {
-          setState(() {
-            dog.like = !dog.like;
-          });
+          print('onToggle: like = ${dog.like}');
+          setState(() => dog.like = !dog.like);
         },
       ),
     );
+  }
+
+  void _buildTilesLater() async {
+    _tiles = [];
+    // The callback function here is called
+    // AFTER the first time the build method runs.
+    // Is this needed so that _listKey.currentState has a value?
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      var currentState = _listKey.currentState!;
+      var delay = const Duration(milliseconds: 200);
+      for (var i = 0; i < _dogs.length; i++) {
+        // Wait a bit before adding the next tile.
+        await Future.delayed(delay, () {
+          _tiles.add(_buildTile(_dogs[i]));
+          currentState.insertItem(i);
+        });
+      }
+    });
   }
 }
