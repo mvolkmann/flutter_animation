@@ -45,6 +45,8 @@ class _HomeState extends State<Home> {
   // The y value will always be at the top of the widget (0 = no offset).
   final Tween<Offset> _offset = Tween(begin: Offset(1, 0), end: Offset(0, 0));
 
+  final divider = Divider(color: Colors.black45, height: 1);
+
   @override
   void initState() {
     super.initState();
@@ -52,11 +54,13 @@ class _HomeState extends State<Home> {
     // The callback function here is called
     // AFTER the first time the build method runs.
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      var currentState = _listKey.currentState!;
       var delay = const Duration(milliseconds: 200);
       for (var i = 0; i < _dogs.length; i++) {
+        // Wait a bit before adding the next tile.
         await Future.delayed(delay, () {
           _tiles.add(_buildTile(_dogs[i]));
-          _listKey.currentState!.insertItem(i);
+          currentState.insertItem(i);
         });
       }
     });
@@ -97,11 +101,16 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildAnimatedList() {
+    // Unlike with ListView, AnimatedList does not
+    // currently have a "separated" named constructor.
+    // See this issue: https://github.com/flutter/flutter/issues/48226
+    // That is why below the tiles are wrapped
+    // in a Column that includes a Divider.
     return AnimatedList(
       initialItemCount: _tiles.length,
       itemBuilder: (context, index, animation) {
         return SlideTransition(
-          child: _tiles[index],
+          child: Column(children: [_tiles[index], divider]),
           position: animation.drive(_offset),
         );
       },
@@ -111,13 +120,10 @@ class _HomeState extends State<Home> {
 
   Widget _buildListView() {
     return ListView.separated(
-      itemCount: _dogs.length,
+      itemCount: _tiles.length,
       itemBuilder: (context, index) => _tiles[index],
-      separatorBuilder: (_, index) => Divider(
-        color: Colors.black45,
-        height: 1,
-      ),
-    ).expanded;
+      separatorBuilder: (_, index) => divider,
+    );
   }
 
   Widget _buildTile(Dog dog) {
