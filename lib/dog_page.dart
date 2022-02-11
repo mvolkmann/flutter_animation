@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animation/extensions/widget_extensions.dart';
 
 import './dogs_state.dart' show breedDescriptions, DogState;
 import './like_button.dart';
+import './extensions/widget_extensions.dart';
 
 class DogPage extends StatelessWidget {
   static const route = 'dog';
@@ -14,7 +14,7 @@ class DogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final description = breedDescriptions[dog.breed] ?? 'none';
-    const imageSize = 200.0;
+    const imageSize = 300.0;
     final image = Hero(
       tag: ObjectKey(dog),
       child: SizedBox(
@@ -28,23 +28,25 @@ class DogPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(dog.name),
       ),
-      body: Column(
-        children: [
-          image,
-          LikeButton(
-            like: dog.like,
-            onToggle: () => dog.toggleLike(),
-          ),
-          SizedBox(height: 20),
-          Text(dog.breed,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              )),
-          SizedBox(height: 20),
-          Text(description),
-        ],
-      ).padding(20),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            image,
+            LikeButton(
+              like: dog.like,
+              onToggle: () => dog.toggleLike(),
+            ),
+            SizedBox(height: 20),
+            Text(dog.breed,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                )),
+            SizedBox(height: 20),
+            Text(description),
+          ],
+        ).padding(20),
+      ),
     );
   }
 }
